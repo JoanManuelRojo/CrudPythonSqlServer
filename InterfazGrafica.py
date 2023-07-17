@@ -1,6 +1,11 @@
+# Se importan los paquetes
+
 from tkinter import *
 from tkinter import messagebox
 import sqlServerCon
+
+
+# Se declaran las propiedades de tkinter
 
 root =Tk()
 
@@ -12,27 +17,87 @@ miFrame.pack()
 miNombre=StringVar()
 varOpcion=IntVar()
 
-
 # Botones y funciones
 
+# Botón confirmar alta le pasa los atributos declarados en los campos que el usuario puede escribir y envia a la base de datos la consulta para su registro.
 def botonConfirmarAlta():
-    sqlServerCon.insertarDatos()
-    pass
+    id = entradaId.get()
+    nombre = entradaNombre.get()
+    clave = entradaClave.get()
+    apellido = entradaApellido.get()
+    direccion = entradaDireccion.get()
+    comentarios = entradaComentarios.get("1.0", "end-1c")
+
+    # Se crea la conexión a la base de datos dentro de la función
+
+    conexion_bdd = sqlServerCon.sqlServerCon()
+
+    # Acá llama al método crearUsuario de la clase sqlServerCon
+
+    conexion_bdd.crearUsuario(id, nombre, clave, apellido, direccion, comentarios)
+
+    messagebox.showinfo("Registro", "Se creó correctamente el usuario en la base de datos.")
+
+
+    # Acá se vacían los campos de entrada de datos después de la operación
+
+    entradaId.delete(0, "end")
+    miNombre.set("")
+    entradaClave.delete(0, "end")
+    entradaApellido.delete(0, "end")
+    entradaDireccion.delete(0, "end")
+    entradaComentarios.delete("1.0", "end")
+
 
 def botonConfirmarBaja():
-    pass
+
+    # Acá se vacían los campos de entrada de datos después de la operación
+
+    entradaId.delete(0, "end")
+    miNombre.set("")
+    entradaClave.delete(0, "end")
+    entradaApellido.delete(0, "end")
+    entradaDireccion.delete(0, "end")
+    entradaComentarios.delete("1.0", "end")
 
 def botonConfirmarModificar():
     pass
 
 def botonConfirmarConsulta():
-    pass
+
+    id = entradaId.get()
+
+    # Se crea la conexión a la base de datos dentro de la función
+
+    conexion_bdd = sqlServerCon.sqlServerCon()
+
+    # Acá llama al método crearUsuario de la clase sqlServerCon
+
+    conexion_bdd.mostrarUsuario(id)
+
+    # Acá se vacían los campos de entrada de datos después de la operación
+
+    entradaNombre.insert()
+    entradaClave.insert()
+    entradaApellido.insert()
+    entradaDireccion.insert()
+    entradaComentarios.insert()
 
 def botonConfirmar():
     pass
 
-botonConfirmar=Button(root, text="Confirmar", command=botonConfirmar)
+botonConfirmar=Button(root, text="Confirmar", command=botonConfirmarAlta)
 botonConfirmar.pack()
+
+
+def botonLimpiar():
+    entradaId.delete(0, "end")
+    miNombre.set("")
+    entradaClave.delete(0, "end")
+    entradaApellido.delete(0, "end")
+    entradaDireccion.delete(0, "end")
+    entradaComentarios.delete("1.0", "end")
+
 
 
 def funcionSalir():
@@ -59,7 +124,6 @@ barraMenu=Menu(root)
 root.config(menu=barraMenu, width=300, height=300)
 
 datosM=Menu(barraMenu, tearoff=0)
-datosM.add_command(label="Conectar")
 datosM.add_command(label="Salir", command=funcionSalir)
 
 
@@ -74,8 +138,8 @@ ayudaM=Menu(barraMenu, tearoff=0)
 ayudaM.add_command(label="Licencia", command=funcionLicencia)
 ayudaM.add_command(label="Acerca de...", command=funcionAcerca)
 
-barraMenu.add_cascade(label="Datos", menu=datosM)
-barraMenu.add_cascade(label="Limpiar", menu='?')
+barraMenu.add_cascade(label="Archivo", menu=datosM)
+barraMenu.add_cascade(label="Limpiar", menu='?', command=botonLimpiar)
 barraMenu.add_cascade(label="ABCM", menu=crudM)
 barraMenu.add_cascade(label="Ayuda", menu=ayudaM)
 
@@ -138,10 +202,6 @@ labelDireccion.grid(row=6, column=0, padx=10, pady=10)
 
 labelComentarios = Label(miFrame, text="COMENTARIO: ")
 labelComentarios.grid(row=7, column=0, padx=10, pady=10)
-
-
-# Llenar datos en la consulta
-
 
 
 root.mainloop()

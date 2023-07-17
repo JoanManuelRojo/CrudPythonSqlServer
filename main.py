@@ -9,7 +9,8 @@ def main():
     #app = InterfazGrafica(root)
     #app.mainloop()
 
-    print(sqlServerCon.queryConsulta())
+    print(sqlServerCon.mostrarUsuario(7))
+
 
 # if __name__ == "__main__":
 
